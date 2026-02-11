@@ -2,13 +2,11 @@ import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/libs/next-auth";
 import config from "@/config";
+import Sidebar from "@/components/dashboard/Sidebar";
+import Header from "@/components/dashboard/Header";
 
-// This is a server-side component to ensure the user is logged in.
-// If not, it will redirect to the login page.
-// It's applied to all subpages of /dashboard in /app/dashboard/*** pages
-// You can also add custom static UI elements like a Navbar, Sidebar, Footer, etc..
-// Layout that protects all dashboard pages with authentication
-export default async function LayoutPrivate({
+// Dashboard layout with sidebar navigation
+export default async function DashboardLayout({
   children,
 }: {
   children: ReactNode;
@@ -19,5 +17,15 @@ export default async function LayoutPrivate({
     redirect(config.auth.loginUrl);
   }
 
-  return <>{children}</>;
+  return (
+    <div className="flex min-h-screen bg-base-200">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <Header />
+        <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
 }

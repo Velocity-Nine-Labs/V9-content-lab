@@ -98,7 +98,7 @@ export default function ApiKeysPage() {
   };
 
   return (
-    <main className="min-h-screen p-8">
+    <div className="p-4 lg:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -300,6 +300,6 @@ export default function ApiKeysPage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

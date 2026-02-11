@@ -7,10 +7,11 @@ import {
   Plug, 
   FileText, 
   Send, 
-  BarChart3,
   Sparkles,
   ArrowRight,
-  Zap
+  Zap,
+  TrendingUp,
+  Clock,
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -51,65 +52,72 @@ export default async function DashboardPage() {
     },
   ];
 
+  // Recent activity (mock data)
+  const recentActivity = [
+    { type: 'created', item: 'AI-generated tweet about productivity', time: '2 hours ago' },
+    { type: 'published', item: 'Instagram post to @mybrand', time: '5 hours ago' },
+    { type: 'scheduled', item: 'LinkedIn article for tomorrow', time: '1 day ago' },
+  ];
+
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Welcome Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">
-            Welcome back{session.user?.name ? `, ${session.user.name}` : ""}! 👋
-          </h1>
-          <p className="text-base-content/70">
-            Create, generate, and publish content from one place.
-          </p>
-        </div>
+    <div className="p-4 lg:p-6 space-y-6">
+      {/* Welcome Header */}
+      <div>
+        <h1 className="text-2xl lg:text-3xl font-bold mb-2">
+          Welcome back{session.user?.name ? `, ${session.user.name}` : ""}! 👋
+        </h1>
+        <p className="text-base-content/70">
+          Create, generate, and publish content from one place.
+        </p>
+      </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="stat bg-base-200 rounded-xl">
-            <div className="stat-figure text-primary">
-              <FileText size={24} />
-            </div>
-            <div className="stat-title">Content Created</div>
-            <div className="stat-value text-primary">0</div>
-            <div className="stat-desc">This month</div>
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="stat bg-base-100 rounded-xl shadow">
+          <div className="stat-figure text-primary">
+            <FileText size={24} />
           </div>
-          <div className="stat bg-base-200 rounded-xl">
-            <div className="stat-figure text-secondary">
-              <Send size={24} />
-            </div>
-            <div className="stat-title">Posts Published</div>
-            <div className="stat-value text-secondary">0</div>
-            <div className="stat-desc">This month</div>
-          </div>
-          <div className="stat bg-base-200 rounded-xl">
-            <div className="stat-figure text-accent">
-              <Plug size={24} />
-            </div>
-            <div className="stat-title">Connected Accounts</div>
-            <div className="stat-value text-accent">0</div>
-            <div className="stat-desc">Active</div>
-          </div>
-          <div className="stat bg-base-200 rounded-xl">
-            <div className="stat-figure text-info">
-              <Zap size={24} />
-            </div>
-            <div className="stat-title">API Requests</div>
-            <div className="stat-value text-info">0</div>
-            <div className="stat-desc">This month</div>
-          </div>
+          <div className="stat-title">Content Created</div>
+          <div className="stat-value text-primary">0</div>
+          <div className="stat-desc">This month</div>
         </div>
+        <div className="stat bg-base-100 rounded-xl shadow">
+          <div className="stat-figure text-secondary">
+            <Send size={24} />
+          </div>
+          <div className="stat-title">Posts Published</div>
+          <div className="stat-value text-secondary">0</div>
+          <div className="stat-desc">This month</div>
+        </div>
+        <div className="stat bg-base-100 rounded-xl shadow">
+          <div className="stat-figure text-accent">
+            <Plug size={24} />
+          </div>
+          <div className="stat-title">Connected Accounts</div>
+          <div className="stat-value text-accent">0</div>
+          <div className="stat-desc">Active</div>
+        </div>
+        <div className="stat bg-base-100 rounded-xl shadow">
+          <div className="stat-figure text-info">
+            <Zap size={24} />
+          </div>
+          <div className="stat-title">API Requests</div>
+          <div className="stat-value text-info">0</div>
+          <div className="stat-desc">This month</div>
+        </div>
+      </div>
 
-        {/* Quick Actions */}
+      {/* Quick Actions */}
+      <div>
         <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon;
             return (
               <Link
                 key={action.href}
                 href={action.href}
-                className="card bg-base-200 hover:bg-base-300 transition-all hover:scale-[1.02] cursor-pointer"
+                className="card bg-base-100 hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer shadow"
               >
                 <div className="card-body">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center mb-3`}>
@@ -125,9 +133,47 @@ export default async function DashboardPage() {
             );
           })}
         </div>
+      </div>
 
-        {/* API Documentation Preview */}
-        <div className="card bg-gradient-to-br from-base-200 to-base-300">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Activity */}
+        <div className="card bg-base-100 shadow">
+          <div className="card-body">
+            <h2 className="card-title">
+              <Clock size={20} />
+              Recent Activity
+            </h2>
+            {recentActivity.length > 0 ? (
+              <div className="space-y-3 mt-2">
+                {recentActivity.map((activity, idx) => (
+                  <div key={idx} className="flex items-start gap-3 p-3 bg-base-200 rounded-lg">
+                    <div className={`badge ${
+                      activity.type === 'created' ? 'badge-primary' :
+                      activity.type === 'published' ? 'badge-success' :
+                      'badge-warning'
+                    }`}>
+                      {activity.type}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{activity.item}</p>
+                      <p className="text-xs text-base-content/60">{activity.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-base-content/60">
+                <p>No recent activity</p>
+                <Link href="/dashboard/create" className="btn btn-primary btn-sm mt-4">
+                  Create Content
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* API Quick Start */}
+        <div className="card bg-gradient-to-br from-base-100 to-base-200 shadow">
           <div className="card-body">
             <h2 className="card-title">
               <Key size={20} />
@@ -136,15 +182,14 @@ export default async function DashboardPage() {
             <p className="text-base-content/70 mb-4">
               Use your API key to create and publish content programmatically.
             </p>
-            <div className="mockup-code bg-base-300 text-sm">
-              <pre data-prefix="$"><code>curl -X POST https://api.contentfactory.velocitynine-labs.com/v1/generate \</code></pre>
-              <pre data-prefix=" "><code>  -H "Authorization: Bearer v9cf_your_api_key" \</code></pre>
-              <pre data-prefix=" "><code>  -H "Content-Type: application/json" \</code></pre>
-              <pre data-prefix=" "><code>  -d '{`{"type": "text", "prompt": "Write a tweet about AI"}`}'</code></pre>
+            <div className="mockup-code bg-base-300 text-xs overflow-x-auto">
+              <pre data-prefix="$"><code>curl -X POST /v1/generate \</code></pre>
+              <pre data-prefix=" "><code>  -H "Authorization: Bearer v9cf_..." \</code></pre>
+              <pre data-prefix=" "><code>  -d '{`{"type": "text", "prompt": "..."}`}'</code></pre>
             </div>
             <div className="card-actions justify-end mt-4">
               <Link href="/docs/api" className="btn btn-ghost btn-sm">
-                View Full Docs
+                View Docs
               </Link>
               <Link href="/dashboard/api-keys" className="btn btn-primary btn-sm">
                 Get API Key
@@ -153,6 +198,38 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
-    </main>
+
+      {/* Usage Overview */}
+      <div className="card bg-base-100 shadow">
+        <div className="card-body">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="card-title">
+              <TrendingUp size={20} />
+              Usage Overview
+            </h2>
+            <Link href="/dashboard/analytics" className="btn btn-ghost btn-sm">
+              View Analytics →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-base-200 rounded-xl p-4">
+              <div className="text-sm text-base-content/60 mb-1">Text Generations</div>
+              <div className="text-2xl font-bold">0 / 100</div>
+              <progress className="progress progress-primary w-full mt-2" value="0" max="100"></progress>
+            </div>
+            <div className="bg-base-200 rounded-xl p-4">
+              <div className="text-sm text-base-content/60 mb-1">Image Generations</div>
+              <div className="text-2xl font-bold">0 / 50</div>
+              <progress className="progress progress-secondary w-full mt-2" value="0" max="100"></progress>
+            </div>
+            <div className="bg-base-200 rounded-xl p-4">
+              <div className="text-sm text-base-content/60 mb-1">Posts Published</div>
+              <div className="text-2xl font-bold">0 / 100</div>
+              <progress className="progress progress-accent w-full mt-2" value="0" max="100"></progress>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
